@@ -3,6 +3,7 @@ package com.artemchep.acpods.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import com.artemchep.acpods.data.AirPods
 import com.artemchep.acpods.live.*
 
@@ -44,7 +45,7 @@ class AirPodsViewModel(application: Application) : AndroidViewModel(application)
      * [issues].
      */
     val nearbyAirPods = object : MediatorLiveData<List<AirPods>>() {
-        private val airPodsObserver = { airPods: List<AirPods> ->
+        private val airPodsObserver = Observer { airPods: List<AirPods> ->
             postValue(airPods)
         }
 
