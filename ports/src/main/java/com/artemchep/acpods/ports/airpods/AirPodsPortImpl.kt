@@ -1,6 +1,7 @@
 package com.artemchep.acpods.ports.airpods
 
 import android.content.Context
+import android.os.SystemClock
 import com.artemchep.acpods.base.extensions.LocalScope
 import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
@@ -27,12 +28,13 @@ class AirPodsPortImpl(
         val scope = LocalScope()
 
         val channel = Channel<List<AirPods>>()
-        val map = HashMap<String, AirPods>()
+        val map = HashMap<String, Pair<AirPods, Long>>()
         scope.launch {
             produceAirPodsEvent(context)
                 .consumeEach {
                     when (it) {
-                        is AirPodsScanner.Event.Add -> map[it.airPods.info.address] = it.airPods
+                        is AirPodsScanner.Event.Add -> map[it.airPods.info.address] =
+                            it.airPods to SystemClock.elapsedRealtime()
                         is AirPodsScanner.Event.Remove -> map.remove(it.airPods.info.address)
                     }
 
@@ -43,7 +45,19 @@ class AirPodsPortImpl(
         scope.launch(Dispatchers.Default) {
             while (isActive) {
                 scope.launch {
+                    // Remove outdated entries from a
+                    // map.
+                    val now = SystemClock.elapsedRealtime()
+                    map.entries
+                        .filter { now - it.value.second > GATHER_MAX_DELAY }
+                        .map { it.key }
+                        .forEach {
+                            map.remove(it)
+                        }
+
+                    // Form a list of AirPods.
                     val list = map.values
+                        .map { it.first }
                         .sortedWith(
                             compareBy(
                                 { it.info.property == AirPods.Property.MyProperty },
