@@ -1,0 +1,4 @@
+include ':app'
+include ':base'
+include ':data'
+include ':ports'

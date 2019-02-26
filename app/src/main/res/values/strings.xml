@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AcPods</string>
+
+    <string name="notification_permissions_title">Missing permissions</string>
+    <string name="notification_permissions_text">Tap to grant the permissions to access bluetooth devices</string>
+
+    <string name="airpods_connected">AirPods connected</string>
+    <string name="airpods_left_battery">left: %d\%%</string>
+    <string name="airpods_right_battery">right: %d\%%</string>
+    <string name="airpods_case_battery">case: %d\%%</string>
+    <string name="airpods_disconnected">AirPods disconnected</string>
+</resources>
