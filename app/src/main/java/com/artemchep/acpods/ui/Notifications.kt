@@ -8,7 +8,6 @@ import androidx.core.app.NotificationCompat
 import com.artemchep.acpods.R
 import com.artemchep.acpods.data.AirPods
 import com.artemchep.acpods.ui.activities.MainActivity
-import com.artemchep.acpods.ui.activities.PermissionActivity
 
 private const val REQUEST_CODE_MAIN = 10
 private const val REQUEST_CODE_PERMISSION = 20
@@ -73,7 +72,7 @@ fun Context.createAirPodsNotification(channel: String, airPods: AirPods?): Notif
 }
 
 fun Context.createMissingPermissionsNotification(channel: String): Notification {
-    val contentIntent = Intent(this, PermissionActivity::class.java)
+    val contentIntent = Intent(this, MainActivity::class.java)
     val contentPi = PendingIntent.getActivity(
         this,
         REQUEST_CODE_PERMISSION,

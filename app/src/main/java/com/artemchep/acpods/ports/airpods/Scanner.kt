@@ -6,6 +6,7 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.util.Log
 import com.artemchep.acpods.base.extensions.LocalScope
+import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -66,7 +67,7 @@ internal class AirPodsScanner(scope: CoroutineScope, private val actor: Channel<
                 // Send new model to the
                 // actor.
                 try {
-                    com.artemchep.acpods.base.ifDebug {
+                    ifDebug {
                         Log.d(TAG, "Sending an AirPod=$airPods to an observer.")
                     }
 
@@ -77,7 +78,7 @@ internal class AirPodsScanner(scope: CoroutineScope, private val actor: Channel<
                         }
                     )
                 } catch (e: ClosedSendChannelException) {
-                    com.artemchep.acpods.base.ifDebug {
+                    ifDebug {
                         throw RuntimeException(e)
                     }
                 }
@@ -107,7 +108,7 @@ internal class AirPodsScanner(scope: CoroutineScope, private val actor: Channel<
         } else isStarted = true
 
         GlobalScope.launch(Dispatchers.Default) {
-            com.artemchep.acpods.base.ifDebug {
+            ifDebug {
                 Log.d(TAG, "Starting to scan...")
             }
 
@@ -145,7 +146,7 @@ internal class AirPodsScanner(scope: CoroutineScope, private val actor: Channel<
         } else error("Service is not started.")
 
         GlobalScope.launch(Dispatchers.Default) {
-            com.artemchep.acpods.base.ifDebug {
+            ifDebug {
                 Log.d(TAG, "Stopping to scan...")
             }
 

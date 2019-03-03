@@ -1,4 +1,4 @@
-package com.artemchep.acpods.models
+package com.artemchep.acpods.domain.models
 
 /**
  * @author Artem Chepurnoy

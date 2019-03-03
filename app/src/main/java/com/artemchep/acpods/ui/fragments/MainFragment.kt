@@ -1,5 +1,6 @@
 package com.artemchep.acpods.ui.fragments
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,13 +15,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.artemchep.acpods.ACTION_PERMISSIONS_CHANGED
 import com.artemchep.acpods.R
-import com.artemchep.acpods.domain.models.AirPod
+import com.artemchep.acpods.data.AirPod
+import com.artemchep.acpods.domain.models.Issue
+import com.artemchep.acpods.domain.viewmodels.AirPodsViewModel
 import com.artemchep.acpods.extensions.containsType
-import com.artemchep.acpods.models.Issue
 import com.artemchep.acpods.ui.adapters.AirPodsAdapter
-import com.artemchep.acpods.viewmodels.AirPodsViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
-import android.bluetooth.BluetoothAdapter
 
 /**
  * @author Artem Chepurnoy
@@ -79,7 +79,7 @@ class MainFragment : Fragment() {
                     permissionsIssueView.isVisible
         })
 
-        nearbyAirPods.observe(viewLifecycleOwner, Observer { airPods ->
+        airPods.observe(viewLifecycleOwner, Observer { airPods ->
             // Update empty view
             airPodsEmptyView.isVisible = airPods.isEmpty()
 

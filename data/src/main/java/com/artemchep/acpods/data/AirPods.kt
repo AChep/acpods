@@ -1,8 +1,5 @@
 package com.artemchep.acpods.data
 
-import com.artemchep.acpods.domain.models.AirCase
-import com.artemchep.acpods.domain.models.AirPod
-
 /**
  * @author Artem Chepurnoy
  */

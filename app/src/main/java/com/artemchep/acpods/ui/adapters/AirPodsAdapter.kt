@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.artemchep.acpods.R
+import com.artemchep.acpods.data.AirPod
 import com.artemchep.acpods.data.AirPods
-import com.artemchep.acpods.domain.models.AirPod
 import com.artemchep.acpods.ui.interfaces.OnItemClickListener
 
 /**

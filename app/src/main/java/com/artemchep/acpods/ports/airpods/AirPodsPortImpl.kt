@@ -6,10 +6,13 @@ import com.artemchep.acpods.base.extensions.LocalScope
 import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
 import com.artemchep.acpods.ports.AirPodsPort
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /**
  * @author Artem Chepurnoy

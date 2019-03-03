@@ -1,8 +1,8 @@
-package com.artemchep.acpods.live
+package com.artemchep.acpods.domain.live
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.artemchep.acpods.models.Issue
+import com.artemchep.acpods.domain.models.Issue
 
 /**
  * @author Artem Chepurnoy

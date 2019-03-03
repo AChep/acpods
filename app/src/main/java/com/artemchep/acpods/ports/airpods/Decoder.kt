@@ -3,8 +3,8 @@ package com.artemchep.acpods.ports.airpods
 import android.bluetooth.BluetoothAssignedNumbers
 import android.bluetooth.le.ScanResult
 import android.util.Log
-import com.artemchep.acpods.domain.models.AirCase
-import com.artemchep.acpods.domain.models.AirPod
+import com.artemchep.acpods.data.AirCase
+import com.artemchep.acpods.data.AirPod
 import com.artemchep.acpods.data.AirPods
 
 /**

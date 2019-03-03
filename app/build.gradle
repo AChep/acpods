@@ -1,3 +1,11 @@
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = file('acpods-release.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -5,18 +13,34 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion target_sdk
     defaultConfig {
         applicationId "com.artemchep.acpods"
-        minSdkVersion 23
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion min_sdk
+        targetSdkVersion target_sdk
+        versionCode version_code
+        versionName version_name
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
+            keyAlias keystoreProperties['key_alias']
+            keyPassword keystoreProperties['password_store']
+            storeFile file('acpods-release.keystore')
+            storePassword keystoreProperties['password_key']
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
+        release {
+            signingConfig signingConfigs.release
+
+            minifyEnabled true
+            useProguard true
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,16 +49,17 @@ android {
 dependencies {
     implementation project("::base")
     implementation project("::data")
+    implementation project("::domain")
     implementation project("::ports")
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-rc02'
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0-rc01'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0-rc01'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-rc01'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-rc01'
+    implementation 'android.arch.navigation:navigation-ui:1.0.0-rc02'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-rc02'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-rc02'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"

@@ -1,10 +1,8 @@
-package com.artemchep.acpods.live
+package com.artemchep.acpods.domain.live
 
-import android.content.Context
 import com.artemchep.acpods.data.AirPods
-import com.artemchep.acpods.live.base.LiveDataWithScope
-import com.artemchep.acpods.ports.AirPodsPort
-import com.artemchep.acpods.ports.airpods.AirPodsPortImpl
+import com.artemchep.acpods.domain.injection
+import com.artemchep.acpods.domain.live.base.LiveDataWithScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
@@ -14,8 +12,8 @@ import kotlinx.coroutines.launch
 /**
  * @author Artem Chepurnoy
  */
-class AirPodsLiveData(context: Context) : LiveDataWithScope<List<AirPods>>() {
-    private val airPodsPort: AirPodsPort = AirPodsPortImpl(context)
+class AirPodsLiveData : LiveDataWithScope<List<AirPods>>() {
+    private val airPodsPort = injection.airPodsPort
 
     override fun onActive() {
         super.onActive()

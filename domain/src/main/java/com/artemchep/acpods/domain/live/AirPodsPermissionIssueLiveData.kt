@@ -1,14 +1,11 @@
-package com.artemchep.acpods.live
+package com.artemchep.acpods.domain.live
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import com.artemchep.acpods.ACTION_PERMISSIONS_CHANGED
-import com.artemchep.acpods.REQUIRED_PERMISSIONS
-import com.artemchep.acpods.extensions.localBroadcastReceiver
-import com.artemchep.acpods.live.base.LiveDataWithScope
-import com.artemchep.acpods.models.Issue
-import com.artemchep.acpods.ports.PermissionsPort
-import com.artemchep.acpods.ports.permissions.PermissionsPortImpl
+import com.artemchep.acpods.domain.ACTION_PERMISSIONS_CHANGED
+import com.artemchep.acpods.domain.REQUIRED_PERMISSIONS
+import com.artemchep.acpods.domain.injection
+import com.artemchep.acpods.domain.live.base.LiveDataWithScope
+import com.artemchep.acpods.domain.models.Issue
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
@@ -17,7 +14,8 @@ import kotlinx.coroutines.launch
  */
 class AirPodsPermissionIssueLiveData(private val context: Context) :
     LiveDataWithScope<Issue.PermissionIssue?>() {
-    private val permissionPort: PermissionsPort = PermissionsPortImpl(context)
+    private val permissionPort = injection.permissionsPost
+    private val localBroadcastPort = injection.localBroadcastPost
 
     override fun onActive() {
         super.onActive()
@@ -25,7 +23,7 @@ class AirPodsPermissionIssueLiveData(private val context: Context) :
         updateValue()
 
         launch {
-            localBroadcastReceiver(context) {
+            localBroadcastPort.produceIntents(context) {
                 addAction(ACTION_PERMISSIONS_CHANGED)
             }
                 .consumeEach {

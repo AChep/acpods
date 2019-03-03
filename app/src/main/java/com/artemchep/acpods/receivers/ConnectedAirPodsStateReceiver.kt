@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.extensions.info
 import com.artemchep.acpods.extensions.isAirPod
 import com.artemchep.acpods.extensions.sessionManager
@@ -21,7 +22,7 @@ class ConnectedAirPodsStateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
 
-        com.artemchep.acpods.base.ifDebug {
+        ifDebug {
             val msg = "Received action=`${intent?.action}` from device `${device?.info()}`"
             Log.d(TAG, msg)
         }

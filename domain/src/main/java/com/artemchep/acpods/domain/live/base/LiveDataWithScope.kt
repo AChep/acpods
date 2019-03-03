@@ -1,4 +1,4 @@
-package com.artemchep.acpods.live.base
+package com.artemchep.acpods.domain.live.base
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope

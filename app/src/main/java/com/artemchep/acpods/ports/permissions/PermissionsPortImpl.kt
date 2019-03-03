@@ -8,9 +8,7 @@ import com.artemchep.acpods.ports.PermissionsPort
 /**
  * @author Artem Chepurnoy
  */
-class PermissionsPortImpl(
-    val context: Context
-) : PermissionsPort {
+class PermissionsPortImpl(private val context: Context) : PermissionsPort {
     override fun getMissingPermissions(permissions: List<String>) =
         permissions.filterNot(::isGranted)
 

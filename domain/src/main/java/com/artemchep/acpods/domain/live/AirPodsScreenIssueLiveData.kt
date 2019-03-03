@@ -1,14 +1,13 @@
-package com.artemchep.acpods.live
+package com.artemchep.acpods.domain.live
 
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.PowerManager
 import androidx.core.content.getSystemService
-import androidx.lifecycle.LiveData
-import com.artemchep.acpods.extensions.broadcastReceiver
-import com.artemchep.acpods.live.base.LiveDataWithScope
-import com.artemchep.acpods.models.Issue
+import com.artemchep.acpods.domain.injection
+import com.artemchep.acpods.domain.live.base.LiveDataWithScope
+import com.artemchep.acpods.domain.models.Issue
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.launch
@@ -18,6 +17,8 @@ import kotlinx.coroutines.launch
  */
 class AirPodsScreenIssueLiveData(private val context: Context) :
     LiveDataWithScope<Issue.ScreenIssue?>() {
+    private val globalBroadcastPost = injection.globalBroadcastPost
+
     override fun onActive() {
         super.onActive()
 
@@ -28,7 +29,7 @@ class AirPodsScreenIssueLiveData(private val context: Context) :
 
         // Observe future screen changes
         launch {
-            broadcastReceiver(context) {
+            globalBroadcastPost.produceIntents(context) {
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_SCREEN_ON)
                 priority = IntentFilter.SYSTEM_HIGH_PRIORITY - 1
