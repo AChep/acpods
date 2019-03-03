@@ -1,7 +1,7 @@
 AcPods
 ==========
 
-<img alt="Main screen: Light" align="right" height="400"
+<img alt="Main screen: Light" align="right" height="600"
    src="https://github.com/AChep/acpods/raw/master/screenshots/screenshot1.jpg" />
 
 The AcPods shows Apple AirPods' battery information on your Android device.
