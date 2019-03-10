@@ -11,9 +11,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.artemchep.acpods.ACTION_PERMISSIONS_CHANGED
 import com.artemchep.acpods.R
 import com.artemchep.acpods.data.AirPod
 import com.artemchep.acpods.domain.models.Issue
@@ -113,10 +111,7 @@ class MainFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            RC_PERMISSIONS -> {
-                val lbm = LocalBroadcastManager.getInstance(context!!)
-                lbm.sendBroadcast(Intent(ACTION_PERMISSIONS_CHANGED))
-            }
+            RC_PERMISSIONS -> viewModel.notifyPermissionsChanged()
         }
     }
 
