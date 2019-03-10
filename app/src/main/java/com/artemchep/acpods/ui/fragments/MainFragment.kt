@@ -11,12 +11,14 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.artemchep.acpods.R
 import com.artemchep.acpods.data.AirPod
 import com.artemchep.acpods.domain.models.Issue
 import com.artemchep.acpods.domain.viewmodels.AirPodsViewModel
 import com.artemchep.acpods.extensions.containsType
+import com.artemchep.acpods.ui.AirPodsDiff
 import com.artemchep.acpods.ui.adapters.AirPodsAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -81,13 +83,16 @@ class MainFragment : Fragment() {
             // Update empty view
             airPodsEmptyView.isVisible = airPods.isEmpty()
 
+            val airPodsOld = adapter.models.toList()
+
             // Update the list
             adapter.models.apply {
                 clear()
                 addAll(airPods)
             }
 
-            adapter.notifyDataSetChanged()
+            val diffResult = DiffUtil.calculateDiff(AirPodsDiff(airPods, airPodsOld))
+            diffResult.dispatchUpdatesTo(adapter)
         })
 
         primaryAirPod.observe(viewLifecycleOwner, Observer { airPods ->
