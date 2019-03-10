@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">AcPods</string>
 
+    <string name="about">About</string>
+    <string name="about_title">AcPods v%s</string>
+    <string name="about_summary">AcPods is a free and open source app written with Kotlin.\n\nThe goal of this app to provide a better experience of using Apple\'s AirPods on Android platform.\n\nPlease note that this app is an unofficial app and has nothing to do with the Apple company.</string>
+
+    <string name="close">Close</string>
+    <string name="repository">Repository</string>
+
     <string name="notification_permissions_title">Missing permissions</string>
     <string name="notification_permissions_text">Tap to grant the permissions to access bluetooth devices</string>
 

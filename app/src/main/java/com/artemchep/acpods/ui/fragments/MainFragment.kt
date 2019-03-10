@@ -20,6 +20,7 @@ import com.artemchep.acpods.domain.viewmodels.AirPodsViewModel
 import com.artemchep.acpods.extensions.containsType
 import com.artemchep.acpods.ui.AirPodsDiff
 import com.artemchep.acpods.ui.adapters.AirPodsAdapter
+import com.artemchep.acpods.ui.dialogs.showAboutDialog
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
@@ -51,6 +52,7 @@ class MainFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
 
+        actionInfoView.setOnClickListener { context!!.showAboutDialog() }
         bluetoothIssueView.setOnClickListener {
             val adapter = BluetoothAdapter.getDefaultAdapter()
             adapter.enable()
