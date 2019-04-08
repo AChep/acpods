@@ -6,12 +6,14 @@ import com.artemchep.acpods.domain.REQUIRED_PERMISSIONS
 import com.artemchep.acpods.domain.injection
 import com.artemchep.acpods.domain.live.base.LiveDataWithScope
 import com.artemchep.acpods.domain.models.Issue
-import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
  * @author Artem Chepurnoy
  */
+@FlowPreview
 class AirPodsPermissionIssueLiveData(private val context: Context) :
     LiveDataWithScope<Issue.PermissionIssue?>() {
     private val permissionPort = injection.permissionsPost
@@ -23,10 +25,12 @@ class AirPodsPermissionIssueLiveData(private val context: Context) :
         updateValue()
 
         launch {
-            localBroadcastPort.produceIntents(context) {
-                addAction(ACTION_PERMISSIONS_CHANGED)
+            with(localBroadcastPort) {
+                flowOfBroadcastIntents(context) {
+                    addAction(ACTION_PERMISSIONS_CHANGED)
+                }
             }
-                .consumeEach {
+                .collect {
                     updateValue()
                 }
         }

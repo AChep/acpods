@@ -4,13 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.artemchep.acpods.base.extensions.LocalScope
 import com.artemchep.acpods.ports.BroadcastPort
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author Artem Chepurnoy
  */
+@FlowPreview
 class LocalBroadcastPortImpl : BroadcastPort {
 
     override fun send(context: Context, intent: Intent) {
@@ -18,12 +21,13 @@ class LocalBroadcastPortImpl : BroadcastPort {
         localBroadcastManager.sendBroadcast(intent)
     }
 
-    override suspend fun produceIntents(
+    @ExperimentalCoroutinesApi
+    override fun CoroutineScope.flowOfBroadcastIntents(
         context: Context,
         builder: IntentFilter.() -> Unit
-    ): Channel<Intent> {
+    ): Flow<Intent> {
         val localBroadcastManager = LocalBroadcastManager.getInstance(context)
-        return LocalScope().produceIntents(
+        return flowOfBroadcastIntents(
             registerReceiver = {
                 val filter = IntentFilter().apply(builder)
                 localBroadcastManager.registerReceiver(it, filter)

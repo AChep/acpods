@@ -3,15 +3,21 @@ package com.artemchep.acpods.ports
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author Artem Chepurnoy
  */
+@FlowPreview
 interface BroadcastPort {
 
     fun send(context: Context, intent: Intent)
 
-    suspend fun produceIntents(context: Context, builder: IntentFilter.() -> Unit): Channel<Intent>
+    fun CoroutineScope.flowOfBroadcastIntents(
+        context: Context,
+        builder: IntentFilter.() -> Unit
+    ): Flow<Intent>
 
 }

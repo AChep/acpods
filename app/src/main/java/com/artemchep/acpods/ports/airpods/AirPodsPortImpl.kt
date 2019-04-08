@@ -2,21 +2,19 @@ package com.artemchep.acpods.ports.airpods
 
 import android.content.Context
 import android.os.SystemClock
-import com.artemchep.acpods.base.extensions.LocalScope
 import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
 import com.artemchep.acpods.ports.AirPodsPort
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ClosedSendChannelException
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowViaChannel
 
 /**
  * @author Artem Chepurnoy
  */
+@FlowPreview
 class AirPodsPortImpl(
     val context: Context
 ) : AirPodsPort {
@@ -25,16 +23,13 @@ class AirPodsPortImpl(
         private const val GATHER_MIN_DELAY = 2L * 1000L
     }
 
-    override suspend fun produceAirPods(): Channel<List<AirPods>> {
+    override fun CoroutineScope.flowOfAirPods(): Flow<List<AirPods>> = flowViaChannel { channel ->
         var initialized = false
 
-        val scope = LocalScope()
-
-        val channel = Channel<List<AirPods>>()
         val map = HashMap<String, Pair<AirPods, Long>>()
-        scope.launch {
-            produceAirPodsEvent(context)
-                .consumeEach {
+        launch {
+            flowOfAirPodsEvents(context)
+                .collect {
                     when (it) {
                         is AirPodsScanner.Event.Add -> map[it.airPods.info.address] =
                             it.airPods to SystemClock.elapsedRealtime()
@@ -45,9 +40,9 @@ class AirPodsPortImpl(
                 }
         }
 
-        scope.launch(Dispatchers.Default) {
+        launch(Dispatchers.Default) {
             while (isActive) {
-                scope.launch {
+                launch {
                     // Remove outdated entries from a
                     // map.
                     val now = SystemClock.elapsedRealtime()
@@ -86,7 +81,5 @@ class AirPodsPortImpl(
                 delay(time)
             }
         }
-
-        return channel
     }
 }

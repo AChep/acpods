@@ -9,6 +9,7 @@ import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.extensions.info
 import com.artemchep.acpods.extensions.isAirPod
 import com.artemchep.acpods.extensions.sessionManager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * @author Artem Chepurnoy
@@ -19,6 +20,7 @@ class ConnectedAirPodsStateReceiver : BroadcastReceiver() {
         const val TAG = "BtDeviceStateReceiver"
     }
 
+    @ExperimentalCoroutinesApi
     override fun onReceive(context: Context, intent: Intent?) {
         val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
 

@@ -5,41 +5,42 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.content.Context
 import android.util.Log
-import com.artemchep.acpods.base.extensions.LocalScope
 import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowViaChannel
 import java.util.concurrent.Executors
 import kotlin.coroutines.resumeWithException
 
-internal suspend fun produceAirPodsEvent(context: Context): Channel<AirPodsScanner.Event> {
-    val scope = LocalScope()
-
-    val channel = Channel<AirPodsScanner.Event>()
-    val scanner = AirPodsScanner(scope, channel)
-    scope.launch {
-        suspendCancellableCoroutine<Unit> {
-            val initialized = scanner.init(context)
-            if (initialized) {
-                scanner.start()
-                // Do not resume the continuation, so it never stops
-                // before we cancel the scope.
-            } else {
-                it.resumeWithException(RuntimeException())
+@FlowPreview
+internal fun CoroutineScope.flowOfAirPodsEvents(context: Context): Flow<AirPodsScanner.Event> =
+    flowViaChannel { channel ->
+        val scanner = AirPodsScanner(this, channel)
+        launch {
+            suspendCancellableCoroutine<Unit> {
+                val initialized = scanner.init(context)
+                if (initialized) {
+                    scanner.start()
+                    // Do not resume the continuation, so it never stops
+                    // before we cancel the scope.
+                } else {
+                    it.resumeWithException(RuntimeException())
+                }
+            }
+        }.invokeOnCompletion {
+            if (scanner.isStarted) {
+                scanner.stop()
             }
         }
-    }.invokeOnCompletion {
-        scanner.stop()
     }
-    return channel
-}
 
 /**
  * @author Artem Chepurnoy
  */
-internal class AirPodsScanner(scope: CoroutineScope, private val actor: Channel<Event>) {
+internal class AirPodsScanner(scope: CoroutineScope, private val actor: SendChannel<Event>) {
 
     companion object {
         const val TAG = "AirPodsScanner"

@@ -10,14 +10,18 @@ import com.artemchep.acpods.ports.airpods.AirPodsPortImpl
 import com.artemchep.acpods.ports.broadcast.GlobalBroadcastPortImpl
 import com.artemchep.acpods.ports.broadcast.LocalBroadcastPortImpl
 import com.artemchep.acpods.ports.permissions.PermissionsPortImpl
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 /**
  * @author Artem Chepurnoy
  */
 class Heart : Application() {
 
+    @ExperimentalCoroutinesApi
     val sessionManager by lazy { SessionManager(this) }
 
+    @FlowPreview
     override fun onCreate() {
         super.onCreate()
         injection = object : Injection {

@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.core.content.getSystemService
 import com.artemchep.acpods.Heart
 import com.artemchep.acpods.SessionManager
-import com.artemchep.acpods.services.ConnectedAirPodsStateService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 private val Context.heart: Heart
     get() = applicationContext as Heart
@@ -16,6 +16,7 @@ private val Context.heart: Heart
  * The instance of a session manager
  * of this app.
  */
+@ExperimentalCoroutinesApi
 val Context.sessionManager: SessionManager
     get() = heart.sessionManager
 

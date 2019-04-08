@@ -13,12 +13,10 @@ import com.artemchep.acpods.extensions.createNotificationChannel
 import com.artemchep.acpods.services.base.LifecycleAwareService
 import com.artemchep.acpods.ui.createAirPodsNotification
 import com.artemchep.acpods.ui.createMissingPermissionsNotification
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 
 /**
  * @author Artem Chepurnoy
  */
-@ObsoleteCoroutinesApi
 class ConnectedAirPodsStateService : LifecycleAwareService() {
 
     companion object {

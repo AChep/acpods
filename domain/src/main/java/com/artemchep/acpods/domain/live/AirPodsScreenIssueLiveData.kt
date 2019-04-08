@@ -8,13 +8,15 @@ import androidx.core.content.getSystemService
 import com.artemchep.acpods.domain.injection
 import com.artemchep.acpods.domain.live.base.LiveDataWithScope
 import com.artemchep.acpods.domain.models.Issue
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.map
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 /**
  * @author Artem Chepurnoy
  */
+@FlowPreview
 class AirPodsScreenIssueLiveData(private val context: Context) :
     LiveDataWithScope<Issue.ScreenIssue?>() {
     private val globalBroadcastPost = injection.globalBroadcastPost
@@ -29,13 +31,15 @@ class AirPodsScreenIssueLiveData(private val context: Context) :
 
         // Observe future screen changes
         launch {
-            globalBroadcastPost.produceIntents(context) {
-                addAction(Intent.ACTION_SCREEN_OFF)
-                addAction(Intent.ACTION_SCREEN_ON)
-                priority = IntentFilter.SYSTEM_HIGH_PRIORITY - 1
+            with(globalBroadcastPost) {
+                flowOfBroadcastIntents(context) {
+                    addAction(Intent.ACTION_SCREEN_OFF)
+                    addAction(Intent.ACTION_SCREEN_ON)
+                    priority = IntentFilter.SYSTEM_HIGH_PRIORITY - 1
+                }
             }
                 .map { it.action == Intent.ACTION_SCREEN_ON }
-                .consumeEach {
+                .collect {
                     postValue(it.asIssue())
                 }
         }

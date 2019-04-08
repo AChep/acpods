@@ -44,6 +44,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // FIXME: Remove after updating kotlin coroutines
+    packagingOptions {
+        exclude("META-INF/atomicfu.kotlin_module")
+    }
 }
 
 dependencies {
