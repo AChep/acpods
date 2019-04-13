@@ -28,8 +28,15 @@ internal inline fun CoroutineScope.flowOfBroadcastIntents(
         }
     }
 
+    val unregister = {
+        try {
+            unregisterReceiver(receiver)
+        } catch (_: IllegalArgumentException) {
+        }
+    }
+
     channel.invokeOnClose {
-        unregisterReceiver(receiver)
+        unregister()
     }
 
     // Register receiver for broadcast
@@ -39,6 +46,6 @@ internal inline fun CoroutineScope.flowOfBroadcastIntents(
             registerReceiver(receiver)
         }
     }.invokeOnCompletion {
-        unregisterReceiver(receiver)
+        unregister()
     }
 }
