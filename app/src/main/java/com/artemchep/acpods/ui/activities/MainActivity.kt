@@ -2,11 +2,9 @@ package com.artemchep.acpods.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.artemchep.acpods.R
 import com.artemchep.acpods.ui.adapters.AirPodsAdapter
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumeEach
 
 /**
  * @author Artem Chepurnoy

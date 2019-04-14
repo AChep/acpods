@@ -19,20 +19,20 @@ import kotlin.coroutines.resumeWithException
 internal fun CoroutineScope.flowOfAirPodsEvents(context: Context): Flow<AirPodsScanner.Event> =
     flowViaChannel { channel ->
         val scanner = AirPodsScanner(this, channel)
-        launch {
-            suspendCancellableCoroutine<Unit> {
-                val initialized = scanner.init(context)
-                if (initialized) {
-                    scanner.start()
-                    // Do not resume the continuation, so it never stops
-                    // before we cancel the scope.
-                } else {
-                    it.resumeWithException(RuntimeException())
+        suspendCancellableCoroutine<Unit> {
+            val initialized = scanner.init(context)
+            if (initialized) {
+                scanner.start()
+
+                it.invokeOnCancellation {
+                    if (scanner.isStarted) {
+                        scanner.stop()
+                    }
                 }
-            }
-        }.invokeOnCompletion {
-            if (scanner.isStarted) {
-                scanner.stop()
+                // Do not resume the continuation, so it never stops
+                // before we cancel the scope.
+            } else {
+                it.resumeWithException(RuntimeException())
             }
         }
     }

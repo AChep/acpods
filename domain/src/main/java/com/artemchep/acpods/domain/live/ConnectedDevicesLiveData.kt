@@ -1,6 +1,6 @@
 package com.artemchep.acpods.domain.live
 
-import com.artemchep.acpods.data.AirPods
+import android.bluetooth.BluetoothDevice
 import com.artemchep.acpods.domain.injection
 import com.artemchep.acpods.domain.live.base.LiveDataWithScope
 import kotlinx.coroutines.*
@@ -10,28 +10,27 @@ import kotlinx.coroutines.flow.collect
  * @author Artem Chepurnoy
  */
 @FlowPreview
-class AirPodsLiveData : LiveDataWithScope<List<AirPods>>() {
-    private val airPodsPort = injection.airPodsPort
+class ConnectedDevicesLiveData : LiveDataWithScope<List<BluetoothDevice>>() {
+    private val connectedDevicesPort = injection.connectedDevicesPort
 
     override fun onActive() {
         super.onActive()
 
         launch {
             while (isActive) {
-                // Try to get the AirPods channel to load; the Bluetooth or
+                // Try to get the connected devices channel to load; the Bluetooth or
                 // something may be off.
                 try {
                     coroutineScope {
-                        with(airPodsPort) {
-                            flowOfAirPods()
+                        with(connectedDevicesPort) {
+                            flowOfDevices()
                         }.collect {
                             postValue(it)
                         }
                     }
                     break
                 } catch (e: Exception) {
-                    // Reschedule the AirPods channel after a
-                    // small delay.
+                    // Reschedule the channel.
                     delay(60 * 1000)
                 }
             }

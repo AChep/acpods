@@ -1,10 +1,10 @@
 package com.artemchep.acpods.ports.broadcast
 
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
 
@@ -14,6 +14,7 @@ internal inline fun CoroutineScope.flowOfBroadcastIntents(
     crossinline registerReceiver: (BroadcastReceiver) -> Unit,
     crossinline unregisterReceiver: (BroadcastReceiver) -> Unit
 ): Flow<Intent> = flowViaChannel { channel ->
+    /*
     val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             launch {
@@ -48,4 +49,5 @@ internal inline fun CoroutineScope.flowOfBroadcastIntents(
     }.invokeOnCompletion {
         unregister()
     }
+     */
 }

@@ -80,11 +80,23 @@ class AirPodsViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    val connectedDevicesLiveData = ConnectedDevicesLiveData()
+
     val primaryAirPod = MediatorLiveData<AirPods?>()
         .apply {
-            addSource(airPods) { airPods ->
-                postValue(airPods.firstOrNull())
+            val resolver = { _: Any? ->
+                val airPodsConnected = !connectedDevicesLiveData.value.isNullOrEmpty()
+                val airPods = if (airPodsConnected) {
+                    airPods.value?.firstOrNull()
+                } else {
+                    null
+                }
+
+                postValue(airPods)
             }
+
+            addSource(airPods, resolver)
+            addSource(connectedDevicesLiveData, resolver)
         }
 
     val primaryAirPodAndIssues = MediatorLiveData<Pair<AirPods?, List<Issue>>>()

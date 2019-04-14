@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion target_sdk
     defaultConfig {
@@ -28,4 +30,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+
+    implementation "io.arrow-kt:arrow-core-data:$arrow_version"
+    implementation "io.arrow-kt:arrow-core-extensions:$arrow_version"
+    implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+    implementation "io.arrow-kt:arrow-typeclasses:$arrow_version"
+    implementation "io.arrow-kt:arrow-extras-data:$arrow_version"
+    implementation "io.arrow-kt:arrow-extras-extensions:$arrow_version"
+    implementation "io.arrow-kt:arrow-optics:$arrow_version"
+    kapt "io.arrow-kt:arrow-meta:$arrow_version"
 }

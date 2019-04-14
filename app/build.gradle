@@ -12,6 +12,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion target_sdk
     defaultConfig {
@@ -72,6 +74,15 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
     implementation "com.afollestad.material-dialogs:core:2.6.0"
     implementation "androidx.browser:browser:1.0.0"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "io.arrow-kt:arrow-core-data:$arrow_version"
+    implementation "io.arrow-kt:arrow-core-extensions:$arrow_version"
+    implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+    implementation "io.arrow-kt:arrow-typeclasses:$arrow_version"
+    implementation "io.arrow-kt:arrow-extras-data:$arrow_version"
+    implementation "io.arrow-kt:arrow-extras-extensions:$arrow_version"
+    implementation "io.arrow-kt:arrow-optics:$arrow_version"
+    kapt "io.arrow-kt:arrow-meta:$arrow_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
