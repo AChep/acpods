@@ -3,8 +3,11 @@ package com.artemchep.acpods.domain.live
 import android.bluetooth.BluetoothDevice
 import com.artemchep.acpods.domain.injection
 import com.artemchep.acpods.domain.live.base.LiveDataWithScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /**
  * @author Artem Chepurnoy
@@ -21,13 +24,11 @@ class ConnectedDevicesLiveData : LiveDataWithScope<List<BluetoothDevice>>() {
                 // Try to get the connected devices channel to load; the Bluetooth or
                 // something may be off.
                 try {
-                    coroutineScope {
-                        with(connectedDevicesPort) {
-                            flowOfDevices()
-                        }.collect {
+                    connectedDevicesPort.flowOfDevices()
+                        .collect {
                             postValue(it)
                         }
-                    }
+
                     break
                 } catch (e: Exception) {
                     // Reschedule the channel.

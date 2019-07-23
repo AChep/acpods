@@ -7,32 +7,43 @@ import android.content.Context
 import android.util.Log
 import com.artemchep.acpods.base.ifDebug
 import com.artemchep.acpods.data.AirPods
+import com.artemchep.acpods.utils.awaitCancel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowViaChannel
+import kotlinx.coroutines.flow.flow
 import java.util.concurrent.Executors
-import kotlin.coroutines.resumeWithException
 
 @FlowPreview
-internal fun CoroutineScope.flowOfAirPodsEvents(context: Context): Flow<AirPodsScanner.Event> =
-    flowViaChannel { channel ->
-        val scanner = AirPodsScanner(this, channel)
-        suspendCancellableCoroutine<Unit> {
-            val initialized = scanner.init(context)
-            if (initialized) {
-                scanner.start()
+internal fun flowOfAirPodsEvents(context: Context): Flow<AirPodsScanner.Event> =
+    flow {
+        coroutineScope {
+            val channel = Channel<AirPodsScanner.Event>(Channel.RENDEZVOUS)
 
-                it.invokeOnCancellation {
+            launch {
+                val scanner = AirPodsScanner(this, channel)
+                try {
+                    val initialized = scanner.init(context)
+                    if (initialized) {
+                        scanner.start()
+                        awaitCancel()
+                    } else {
+                        throw RuntimeException()
+                    }
+                } finally {
+                    // Stop the scanner before killing the
+                    // job.
                     if (scanner.isStarted) {
                         scanner.stop()
                     }
                 }
-                // Do not resume the continuation, so it never stops
-                // before we cancel the scope.
-            } else {
-                it.resumeWithException(RuntimeException())
+            }
+
+            channel.consumeEach {
+                emit(it)
             }
         }
     }

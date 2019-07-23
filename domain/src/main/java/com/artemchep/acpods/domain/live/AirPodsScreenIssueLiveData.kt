@@ -31,13 +31,12 @@ class AirPodsScreenIssueLiveData(private val context: Context) :
 
         // Observe future screen changes
         launch {
-            with(globalBroadcastPost) {
-                flowOfBroadcastIntents(context) {
+            globalBroadcastPost
+                .flowOfBroadcastIntents(context) {
                     addAction(Intent.ACTION_SCREEN_OFF)
                     addAction(Intent.ACTION_SCREEN_ON)
                     priority = IntentFilter.SYSTEM_HIGH_PRIORITY - 1
                 }
-            }
                 .map { it.action == Intent.ACTION_SCREEN_ON }
                 .collect {
                     postValue(it.asIssue())

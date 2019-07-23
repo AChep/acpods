@@ -1,7 +1,6 @@
 package com.artemchep.acpods.ports
 
 import com.artemchep.acpods.data.AirPods
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @FlowPreview
 interface AirPodsPort {
 
-    fun CoroutineScope.flowOfAirPods(): Flow<List<AirPods>>
+    fun flowOfAirPods(): Flow<List<AirPods>>
 
 }

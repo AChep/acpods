@@ -1,7 +1,6 @@
 package com.artemchep.acpods.ports
 
 import android.bluetooth.BluetoothDevice
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @FlowPreview
 interface ConnectedDevicesPort {
 
-    fun CoroutineScope.flowOfDevices(): Flow<List<BluetoothDevice>>
+    fun flowOfDevices(): Flow<List<BluetoothDevice>>
 
 }

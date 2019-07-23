@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.artemchep.acpods.ports.BroadcastPort
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,7 @@ class GlobalBroadcastPortImpl : BroadcastPort {
     }
 
     @ExperimentalCoroutinesApi
-    override fun CoroutineScope.flowOfBroadcastIntents(
+    override fun flowOfBroadcastIntents(
         context: Context,
         builder: IntentFilter.() -> Unit
     ): Flow<Intent> {

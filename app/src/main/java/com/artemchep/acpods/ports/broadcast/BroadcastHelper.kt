@@ -1,53 +1,42 @@
 package com.artemchep.acpods.ports.broadcast
 
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import com.artemchep.acpods.utils.awaitCancel
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowViaChannel
+import kotlinx.coroutines.flow.flow
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-internal inline fun CoroutineScope.flowOfBroadcastIntents(
+internal inline fun flowOfBroadcastIntents(
     crossinline registerReceiver: (BroadcastReceiver) -> Unit,
     crossinline unregisterReceiver: (BroadcastReceiver) -> Unit
-): Flow<Intent> = flowViaChannel { channel ->
-    /*
-    val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            launch {
-                try {
+): Flow<Intent> = flow {
+    coroutineScope {
+        val channel = Channel<Intent>(Channel.RENDEZVOUS)
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                launch {
                     channel.send(intent)
-                } catch (e: ClosedSendChannelException) {
-                    com.artemchep.acpods.base.ifDebug {
-                        throw RuntimeException(e)
-                    }
                 }
             }
         }
-    }
 
-    val unregister = {
-        try {
-            unregisterReceiver(receiver)
-        } catch (_: IllegalArgumentException) {
+        launch(Dispatchers.Main) {
+            try {
+                registerReceiver(receiver)
+                awaitCancel()
+            } finally {
+                unregisterReceiver(receiver)
+            }
+        }
+
+        channel.consumeEach {
+            emit(it)
         }
     }
-
-    channel.invokeOnClose {
-        unregister()
-    }
-
-    // Register receiver for broadcast
-    // intents.
-    launch {
-        suspendCancellableCoroutine<Unit> {
-            registerReceiver(receiver)
-        }
-    }.invokeOnCompletion {
-        unregister()
-    }
-     */
 }

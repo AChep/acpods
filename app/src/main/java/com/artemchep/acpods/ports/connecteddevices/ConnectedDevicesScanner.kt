@@ -5,31 +5,42 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import com.artemchep.acpods.utils.awaitCancel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowViaChannel
-import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.flow.flow
 
 @FlowPreview
-internal fun CoroutineScope.flowOfConnectedDevices(context: Context): Flow<List<BluetoothDevice>> =
-    flowViaChannel { channel ->
-        val scanner = ConnectedDevicesScanner(this, channel)
-        suspendCancellableCoroutine<Unit> {
-            val initialized = scanner.init(context)
-            if (initialized) {
-                scanner.start()
+internal fun flowOfConnectedDevices(context: Context): Flow<List<BluetoothDevice>> =
+    flow {
+        coroutineScope {
+            val channel = Channel<List<BluetoothDevice>>(Channel.RENDEZVOUS)
 
-                it.invokeOnCancellation {
+            launch {
+                val scanner = ConnectedDevicesScanner(this, channel)
+                try {
+                    val initialized = scanner.init(context)
+                    if (initialized) {
+                        scanner.start()
+                        awaitCancel()
+                    } else {
+                        throw RuntimeException()
+                    }
+                } finally {
+                    // Stop the scanner before killing the
+                    // job.
                     if (scanner.isStarted) {
                         scanner.stop()
                     }
                 }
-                // Do not resume the continuation, so it never stops
-                // before we cancel the scope.
-            } else {
-                it.resumeWithException(RuntimeException())
+            }
+
+            channel.consumeEach {
+                emit(it)
             }
         }
     }

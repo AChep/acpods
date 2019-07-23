@@ -25,11 +25,10 @@ class AirPodsPermissionIssueLiveData(private val context: Context) :
         updateValue()
 
         launch {
-            with(localBroadcastPort) {
-                flowOfBroadcastIntents(context) {
+            localBroadcastPort
+                .flowOfBroadcastIntents(context) {
                     addAction(ACTION_PERMISSIONS_CHANGED)
                 }
-            }
                 .collect {
                     updateValue()
                 }

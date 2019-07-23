@@ -3,7 +3,6 @@ package com.artemchep.acpods.ports
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 
@@ -15,7 +14,7 @@ interface BroadcastPort {
 
     fun send(context: Context, intent: Intent)
 
-    fun CoroutineScope.flowOfBroadcastIntents(
+    fun flowOfBroadcastIntents(
         context: Context,
         builder: IntentFilter.() -> Unit
     ): Flow<Intent>
