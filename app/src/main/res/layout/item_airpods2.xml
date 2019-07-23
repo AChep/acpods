@@ -16,7 +16,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="AirPods"
         android:textAppearance="?android:textAppearanceLarge"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,19 +24,94 @@
         android:id="@+id/addressView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="monospace"
+        android:gravity="center_vertical"
         android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/nameView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addressIconView"
+        app:layout_constraintTop_toBottomOf="@id/nameView"
+        tools:text="12:FF:22:33:44" />
+
+    <ImageView
+        android:id="@+id/addressIconView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_tag_text"
+        app:layout_constraintEnd_toStartOf="@id/addressView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/addressView"
         tools:text="12:FF:22:33:44" />
 
     <TextView
-        android:id="@+id/stateView"
+        android:id="@+id/signalView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?android:textColorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="monospace"
+        android:gravity="center_vertical"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/signalIconView"
         app:layout_constraintTop_toBottomOf="@id/addressView"
-        tools:text="Left: 100%, right: 100%, case: 100%" />
+        tools:text="-45" />
+
+    <ImageView
+        android:id="@+id/signalIconView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_signal"
+        app:layout_constraintEnd_toStartOf="@id/signalView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/signalView"
+        tools:text="12:FF:22:33:44" />
+
+    <ImageView
+        android:id="@+id/leftPodImage"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="18dp"
+        android:rotationY="180"
+        android:src="@drawable/ic_airpods"
+        app:layout_constraintEnd_toStartOf="@id/rightPodImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/rightPodImage"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_airpods"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/leftPodBatteryView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/leftPodImage"
+        app:layout_constraintStart_toStartOf="@id/leftPodImage"
+        app:layout_constraintTop_toBottomOf="@id/leftPodImage"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/rightPodBatteryView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/rightPodImage"
+        app:layout_constraintStart_toStartOf="@id/rightPodImage"
+        app:layout_constraintTop_toBottomOf="@id/rightPodImage"
+        tools:text="100%" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
